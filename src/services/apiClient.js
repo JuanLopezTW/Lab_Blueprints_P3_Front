@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
   timeout: 8000,
 })
 
@@ -23,5 +23,26 @@ api.interceptors.response.use(
     return Promise.reject(err)
   },
 )
+
+export const apiclient = {
+  async getAll() {
+    const { data } = await api.get('/blueprints')
+    return data.data
+  },
+  async getByAuthor(author) {
+    const { data } = await api.get(`/blueprints/${encodeURIComponent(author)}`)
+    return data.data
+  },
+  async getByAuthorAndName(author, name) {
+    const { data } = await api.get(
+      `/blueprints/${encodeURIComponent(author)}/${encodeURIComponent(name)}`,
+    )
+    return data.data
+  },
+  async create(blueprint) {
+    const { data } = await api.post('/blueprints', blueprint)
+    return data.data
+  },
+}
 
 export default api

@@ -101,6 +101,41 @@ Al hacer clic en el botón `Open`, debe:
   - Definir un módulo `blueprintsService.js` que importe uno u otro según una variable en `.env`.
   - Ejemplo en `.env` (Vite):
 
+Se implementaron los 2 servicios con la misma interfaz uno que devolviera datos quemados en memoria "apimock" y otro que
+consume el API REST real mediante axios "apiclient" y poder cambiar entre ellos solo modificando una linea en el .env
+mientras que el mock llamaria funciones el cliente llamaria a los endpoints en el back
+
+para realizar la conexion al backend se realizo ajustes debido a que no manejamos cors en el lab anterior
+asi cambiamos que cambiamos la ruta del back de "vite" a "/api/v1", y luego agregamos una proxi ya que 
+como el front corre en el puerto 5173 y el back "API" corre en el 8080 el navegador los trataria como origenes distintos
+y bloquearia su cominicacion, el proxy resuelve este problema asi Vire re envia las rutas necesarias al back de 8080
+sin embargo la URL se convierte en algo relativo y no en una direccion absoluta, hay que destacar que 
+esto solo se realizo para efectos practicos del lab, en un despliege real se necesitaria el cors para poder funcionar.
+
+![modoMock.png](docs/images/punto4/modoMock.png)
+
+Sin el backend desplegado y con el mock en True, podemos ver como en la busqeuda del autor JohnConnor lista sus planos 
+desde el apimock y al abrir su plano de house se dibuja en el canvas.
+
+![modoRealSinLogging.png](docs/images/punto4/modoRealSinLogging.png)
+
+Con el mock en false y sin haber iniciado sesion podemos ver , como las peticiones que salen
+hacia el front y el proxi se las lleva al back fallan con un 401 porque el enpoint
+esta protegido
+
+![logingexitoso.png](docs/images/punto4/logingexitoso.png)
+
+Usando el usuario quemado del back del lab pasado "student" con su contraseña "student123" se realiza el respectivo
+llamado y podemos ver como sale un aviso de loggin exitoso y el access_token se guarda
+en la memoria local, asi se agrega en cada peticion.
+
+![ConsultaPostLoging.png](docs/images/punto4/ConsultaPostLoging.png)
+
+Ya con la autentificacion podemos consultar los planos de los autores que se alojen en la base de datos del lab anterior
+en este caso el autor jhon con los planos de house y garage, al darle open podemos ver como se abre
+en este caso se ve pequeño y en una esquina ya que los planos originas eran cordenadas que iban de
+0 a 15 y el canvas ahora mide 520x360.
+
 ```env
 VITE_USE_MOCK=true
 ```
