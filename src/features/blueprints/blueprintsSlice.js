@@ -32,6 +32,8 @@ const slice = createSlice({
     current: null,
     status: 'idle',
     error: null,
+    searchStatus: 'idle',
+    searchError: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -47,8 +49,18 @@ const slice = createSlice({
         s.status = 'failed'
         s.error = a.error.message
       })
+      .addCase(fetchByAuthor.pending, (s) => {
+        s.searchStatus = 'loading'
+        s.searchError = null
+      })
       .addCase(fetchByAuthor.fulfilled, (s, a) => {
+        s.searchStatus = 'succeeded'
         s.byAuthor[a.payload.author] = a.payload.items
+      })
+      .addCase(fetchByAuthor.rejected, (s, a) => {
+        s.searchStatus = 'failed'
+        s.searchError = a.error.message
+        s.byAuthor[a.meta.arg] = []
       })
       .addCase(fetchBlueprint.fulfilled, (s, a) => {
         s.current = a.payload

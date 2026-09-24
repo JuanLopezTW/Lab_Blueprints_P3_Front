@@ -13,8 +13,8 @@ describe('apimock', () => {
     expect(items.every((bp) => bp.author === 'JohnConnor')).toBe(true)
   })
 
-  it('getByAuthor devuelve una lista vacía si el autor no existe', async () => {
-    expect(await apimock.getByAuthor('nadie')).toEqual([])
+  it('getByAuthor rechaza si el autor no existe (igual que el 404 del API real)', async () => {
+    await expect(apimock.getByAuthor('nadie')).rejects.toThrow(/No hay blueprints/)
   })
 
   it('getByAuthorAndName devuelve el plano con sus puntos', async () => {

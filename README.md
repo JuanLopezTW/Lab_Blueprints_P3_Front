@@ -154,6 +154,28 @@ VITE_USE_MOCK=true
 - Se puede usar Bootstrap u otro framework CSS.
 - Ajustar la tabla, botones y tarjetas para acercarse al mock de referencia.
 
+Decidimos cambiar los colores de la app para que se sienta algo mas propio de la ECI
+sin modificar realmente la logica, para que tuviera mas personalidad,
+tambien cambiamos los texto de inglesa a español
+
+
+![CambioDeColores.png](docs/images/punto%206/CambioDeColores.png)
+
+Aqui podemos obsevar como se ve la nueva paleta de colores de la pagina ademas de
+centrarla
+
+![AgregarHoobers.png](docs/images/punto%206/AgregarHoobers.png)
+
+Al pasar el mouse por una fila esta se resalta con un tono un poco mas claro para que se diferencie que esta
+seleccionado
+
+![VentanaReducida.png](docs/images/punto%206/VentanaReducida.png)
+
+Aqui reducimos el tamaño de la ventana para ver como se com dimensiones distintas
+podemos observar como se ajusta a la resolucion, ademas de ver el aviso resaltado de que
+el "autor" "nadie" no existe.
+
+
 ## 7. Pruebas unitarias
 
 - Agregar pruebas con Vitest + Testing Library para validar:

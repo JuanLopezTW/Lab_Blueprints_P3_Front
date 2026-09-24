@@ -8,12 +8,12 @@ export default function App() {
   return (
     <div className="container">
       <header>
-        <h1>ECI - Laboratorio de Blueprints en React</h1>
+        <h1>ECI - Blueprints</h1>
         <nav>
           <NavLink to="/" end>
             Blueprints
           </NavLink>
-          <NavLink to="/login">Login</NavLink>
+          <NavLink to="/login">Iniciar sesión</NavLink>
         </nav>
       </header>
       <Routes>
