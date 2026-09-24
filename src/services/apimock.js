@@ -43,7 +43,11 @@ export const apimock = {
   },
 
   getByAuthor(author) {
-    return delay(clone(db.filter((bp) => bp.author === author)))
+    const items = db.filter((bp) => bp.author === author)
+    if (!items.length) {
+      return Promise.reject(new Error(`No hay blueprints para el autor ${author}`))
+    }
+    return delay(clone(items))
   },
 
   getByAuthorAndName(author, name) {

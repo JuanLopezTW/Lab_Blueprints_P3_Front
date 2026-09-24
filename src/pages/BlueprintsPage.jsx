@@ -9,7 +9,7 @@ import BlueprintCanvas from '../components/BlueprintCanvas.jsx'
 
 export default function BlueprintsPage() {
   const dispatch = useDispatch()
-  const { byAuthor, current, status } = useSelector((s) => s.blueprints)
+  const { byAuthor, current, searchStatus, searchError } = useSelector((s) => s.blueprints)
   const [authorInput, setAuthorInput] = useState('')
   const [selectedAuthor, setSelectedAuthor] = useState('')
   const items = byAuthor[selectedAuthor] || []
@@ -34,32 +34,37 @@ export default function BlueprintsPage() {
   }
 
   return (
-    <div className="grid" style={{ gridTemplateColumns: '1.1fr 1.4fr', gap: 24 }}>
+    <div className="grid page-layout">
       <section className="grid" style={{ gap: 16 }}>
         <div className="card">
           <h2 style={{ marginTop: 0 }}>Blueprints</h2>
           <div style={{ display: 'flex', gap: 12 }}>
             <input
               className="input"
-              placeholder="Author"
+              placeholder="Autor"
               value={authorInput}
               onChange={(e) => setAuthorInput(e.target.value)}
             />
             <button className="btn primary" onClick={getBlueprints}>
-              Get blueprints
+              Buscar planos
             </button>
           </div>
         </div>
 
         <div className="card">
           <h3 style={{ marginTop: 0 }}>
-            {selectedAuthor ? `${selectedAuthor}'s blueprints:` : 'Results'}
+            {selectedAuthor ? `Planos de ${selectedAuthor}:` : 'Resultados'}
           </h3>
-          {status === 'loading' && <p>Cargando...</p>}
-          {!items.length && status !== 'loading' && <p>Sin resultados.</p>}
+          {searchStatus === 'loading' && <p>Cargando...</p>}
+          {searchStatus === 'failed' && (
+            <p role="alert" className="alert-error">
+              {searchError}
+            </p>
+          )}
+          {searchStatus === 'succeeded' && !items.length && <p>Sin resultados.</p>}
           {!!items.length && (
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table className="list-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
                     <th
@@ -69,7 +74,7 @@ export default function BlueprintsPage() {
                         borderBottom: '1px solid #334155',
                       }}
                     >
-                      Blueprint name
+                      Nombre del plano
                     </th>
                     <th
                       style={{
@@ -78,7 +83,7 @@ export default function BlueprintsPage() {
                         borderBottom: '1px solid #334155',
                       }}
                     >
-                      Number of points
+                      Número de puntos
                     </th>
                     <th style={{ padding: '8px', borderBottom: '1px solid #334155' }}></th>
                   </tr>
@@ -96,11 +101,11 @@ export default function BlueprintsPage() {
                           borderBottom: '1px solid #1f2937',
                         }}
                       >
-                        {bp.points?.length || 0}
+                        <span className="badge">{bp.points?.length || 0}</span>
                       </td>
                       <td style={{ padding: '8px', borderBottom: '1px solid #1f2937' }}>
                         <button className="btn" onClick={() => openBlueprint(bp)}>
-                          Open
+                          Abrir
                         </button>
                       </td>
                     </tr>
@@ -109,12 +114,12 @@ export default function BlueprintsPage() {
               </table>
             </div>
           )}
-          <p style={{ marginTop: 12, fontWeight: 700 }}>Total user points: {totalPoints}</p>
+          <p style={{ marginTop: 12, fontWeight: 700 }}>Total de puntos: {totalPoints}</p>
         </div>
       </section>
 
       <section className="card">
-        <h3 style={{ marginTop: 0 }}>Current blueprint: {current?.name || '—'}</h3>
+        <h3 style={{ marginTop: 0 }}>Plano actual: {current?.name || '—'}</h3>
         <BlueprintCanvas points={current?.points || []} />
       </section>
     </div>

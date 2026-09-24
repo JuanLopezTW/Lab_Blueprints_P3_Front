@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { configureStore } from '@reduxjs/toolkit'
 
+// Se reemplaza el servicio para probar los thunks sin red ni .env
 vi.mock('../src/services/blueprintsService.js', () => ({
   default: {
     getAll: vi.fn(),
@@ -31,6 +32,19 @@ describe('thunks de blueprints usando blueprintsService', () => {
 
     expect(service.getByAuthor).toHaveBeenCalledWith('john')
     expect(store.getState().blueprints.byAuthor.john).toEqual([house])
+    expect(store.getState().blueprints.searchStatus).toBe('succeeded')
+  })
+
+  it('fetchByAuthor guarda el error y vacía la lista si el servicio falla', async () => {
+    service.getByAuthor.mockRejectedValue(new Error('No hay blueprints para el autor nadie'))
+    const store = makeStore()
+
+    await store.dispatch(fetchByAuthor('nadie'))
+
+    const state = store.getState().blueprints
+    expect(state.searchStatus).toBe('failed')
+    expect(state.searchError).toMatch(/No hay blueprints/)
+    expect(state.byAuthor.nadie).toEqual([])
   })
 
   it('fetchBlueprint guarda el plano actual', async () => {
