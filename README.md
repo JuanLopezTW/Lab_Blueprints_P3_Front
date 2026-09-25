@@ -73,6 +73,15 @@ blueprints-react-lab/
 - Incluir un componente `BlueprintCanvas` con un identificador propio.
 - Definir dimensiones adecuadas (ej. `520×360`) para que no ocupe toda la pantalla pero permita dibujar los planos.
 
+##### Solucion 
+
+Para este punto se usó el componente `BlueprintCanvas`, que ya venía incluido en el proyecto base que clonamos. Este componente crea un lienzo (canvas) de 520x360 píxeles usando el hook `useRef` de React, que permite obtener acceso directo al elemento del canvas para poder dibujar en él más adelante. Al cargar la página, el canvas se muestra vacío con una cuadrícula de fondo, lista para recibir los puntos de un plano cuando se seleccione uno.
+
+Verifiqué que el canvas se ve correctamente al iniciar la aplicación, antes de buscar cualquier plano.
+
+![Punto 1](docs/images/punto1/canva_vacio.png)
+
+
 ## 2. Listar los planos de un autor
 
 - Permitir ingresar el nombre de un autor y consultar sus planos desde el backend (o mock).
@@ -88,6 +97,14 @@ Al hacer clic en el botón `Open`, debe:
 - Actualizar un campo de texto con el nombre del plano actual.
 - Obtener los puntos del plano correspondiente.
 - Dibujar consecutivamente los segmentos de recta en el canvas y marcar cada punto.
+
+##### Solucion
+
+Este punto también ya estaba resuelto en el proyecto base, en el archivo `BlueprintsPage.jsx`. Cuando se busca un autor y se le da clic al botón "Open" de uno de sus planos, se dispara una acción de Redux (`fetchBlueprint`) que trae los datos del plano específico (nombre y puntos) desde el backend. Esos datos se guardan en el estado global de la aplicación, y el componente `BlueprintCanvas` los recibe automáticamente para dibujar las líneas que conectan cada punto y marcar cada punto con un círculo.
+
+Probé el flujo completo: inicié sesión, busqué los planos de un autor, le di clic a "Open" en uno de ellos y verifiqué que el plano se dibujó correctamente en el canvas, mostrando las líneas y los puntos.
+
+![Punto 3](docs/images/punto3/prueba1_punto3.png)
 
 ## 4. Servicios: `apimock` y `apiclient`
 
@@ -150,6 +167,15 @@ VITE_USE_MOCK=true
 - El nombre del plano actual debe mostrarse en el DOM como parte del estado global (Redux).
 - Evitar manipular directamente el DOM; usar componentes y props/estado.
 
+##### Solucion
+
+Este punto tiene que ver con que la información del plano seleccionado (su nombre y sus puntos) no se maneja con una variable normal ni se escribe directo en el HTML, sino que vive en el estado global de Redux. Implementacion: el nombre del plano actual y el canvas leen esta información usando el hook `useSelector`, que conecta los componentes con el store de Redux.
+
+Para comprobar esto, instalé la extensión Redux DevTools en el navegador y, después de abrir un plano, revisé el estado guardado en Redux, donde efectivamente se veía el nombre y los puntos del plano seleccionado.
+
+![Punto 5](docs/images/punto5/punto5.png)
+
+
 ## 6. Estilos
 
 - Agregar estilos para mejorar la presentación.
@@ -185,7 +211,21 @@ el "autor" "nadie" no existe.
   - Envío de formularios.
   - Interacciones básicas con Redux (por ejemplo: dispatch de `fetchByAuthor`).
 
----
+##### Solucion
+
+pruebas unitarias usando Vitest y React Testing Library, ubicadas en la carpeta `tests/`. Estas pruebas verifican, entre otras cosas:
+
+- Que el canvas se renderiza correctamente y que intenta dibujar cuando recibe puntos.
+- Que el formulario para crear un plano funciona bien: al llenar los campos y darle guardar, se envían los datos correctamente.
+- Que al buscar los planos de un autor, se dispara la acción correspondiente en Redux y el estado se actualiza con la información recibida.
+- Pruebas adicionales sobre el servicio que simula datos de prueba (`apimock`) y sobre el cambio entre datos simulados y datos reales del backend según la configuración del proyecto.
+
+Ejecuté las pruebas con el comando `npm test` y todas pasaron correctamente (7 archivos de prueba, 18 pruebas en total).
+
+![Punto 7](docs/images/punto7/prueba.png)
+
+
+
 
 ### Notas rápidas y recomendaciones
 
